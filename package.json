@@ -1,0 +1,60 @@
+{
+  "name": "crsp_crowdsourcing_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ts-init": "tsc --init",
+    "server-clear": "rm -rf build/ && rm -rf server/public && rm -rf server/views",
+    "server-create": "mkdir .\\server\\public && mkdir .\\server\\views",
+    "server-move": "mv server/public build/ && mv server/views build/",
+    "server-dev": "nodemon -x ts-node ./server/index.ts",
+    "server-build": "tsc",
+    "server-start": "node ./build/index.js",
+    "server-publish": "npm run server-build && npm run server-start",
+    "app-clear": "rm -rf app/build",
+    "app-dev": "npm run start --prefix ./app",
+    "app-build": "npm run app-clear && npm run server-clear && npm run server-create && npm run build --prefix ./app && cp -r ./app/build/*  ./server/public/ && mv server/public/index.html server/views/",
+    "dev": "concurrently \"npm run server-dev \" \"npm run app-dev\"",
+    "build": " npm run server-build ",
+    "start": "node ./build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FgSurewin/crsp_crowdsourcing_app.git"
+  },
+  "keywords": [],
+  "author": "FgSurewin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FgSurewin/crsp_crowdsourcing_app/issues"
+  },
+  "homepage": "https://github.com/FgSurewin/crsp_crowdsourcing_app#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "concurrently": "^6.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.3",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.12",
+    "nunjucks": "^3.2.3",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/body-parser": "^1.19.1",
+    "@types/cors": "^2.8.12",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^16.4.2",
+    "@types/nunjucks": "^3.1.5"
+  }
+}

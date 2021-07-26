@@ -1,0 +1,38 @@
+{
+  "files": {
+    "main.js": "/static/js/main.dcc3145a.chunk.js",
+    "main.js.map": "/static/js/main.dcc3145a.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.be265e1d.js",
+    "runtime-main.js.map": "/static/js/runtime-main.be265e1d.js.map",
+    "static/css/2.871693cb.chunk.css": "/static/css/2.871693cb.chunk.css",
+    "static/js/2.3c0e8339.chunk.js": "/static/js/2.3c0e8339.chunk.js",
+    "static/js/2.3c0e8339.chunk.js.map": "/static/js/2.3c0e8339.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.871693cb.chunk.css.map": "/static/css/2.871693cb.chunk.css.map",
+    "static/js/2.3c0e8339.chunk.js.LICENSE.txt": "/static/js/2.3c0e8339.chunk.js.LICENSE.txt",
+    "static/media/BigLogo.c62763f7.svg": "/static/media/BigLogo.c62763f7.svg",
+    "static/media/Email.764fd95d.svg": "/static/media/Email.764fd95d.svg",
+    "static/media/Facebook.8b7c2992.svg": "/static/media/Facebook.8b7c2992.svg",
+    "static/media/GitHub.01dee938.svg": "/static/media/GitHub.01dee938.svg",
+    "static/media/Group1.c70054d7.png": "/static/media/Group1.c70054d7.png",
+    "static/media/SmallLogo.afb353d7.svg": "/static/media/SmallLogo.afb353d7.svg",
+    "static/media/Twitter.a5eed533.svg": "/static/media/Twitter.a5eed533.svg",
+    "static/media/background.608cdf8f.mp4": "/static/media/background.608cdf8f.mp4",
+    "static/media/blackLogo.7deb7805.svg": "/static/media/blackLogo.7deb7805.svg",
+    "static/media/comma.48fe24c0.svg": "/static/media/comma.48fe24c0.svg",
+    "static/media/curve.78513b22.svg": "/static/media/curve.78513b22.svg",
+    "static/media/dot.80e5d2fb.svg": "/static/media/dot.80e5d2fb.svg",
+    "static/media/girl.b119a21d.png": "/static/media/girl.b119a21d.png",
+    "static/media/location.74cf94a2.svg": "/static/media/location.74cf94a2.svg",
+    "static/media/man.6a157112.jpg": "/static/media/man.6a157112.jpg",
+    "static/media/question.9741b1f2.svg": "/static/media/question.9741b1f2.svg",
+    "static/media/scrollDown.b740b291.svg": "/static/media/scrollDown.b740b291.svg",
+    "static/media/whole.6e3e4c4d.svg": "/static/media/whole.6e3e4c4d.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.be265e1d.js",
+    "static/css/2.871693cb.chunk.css",
+    "static/js/2.3c0e8339.chunk.js",
+    "static/js/main.dcc3145a.chunk.js"
+  ]
+}
