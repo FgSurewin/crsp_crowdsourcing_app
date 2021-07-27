@@ -1,8 +1,16 @@
 import React from "react";
 import Navbar from "../../components/Navbar";
+import LoginImageBG from "../../images/login-2.jpg";
 import { useDispatch } from "react-redux";
-import { Form, Input, Button, message } from "antd";
-import { FormWrapper, LoginText, LoginContainer } from "./LoginStyle";
+import { Form, Input, Button, message, Row, Col } from "antd";
+import {
+  FormWrapper,
+  LoginText,
+  LoginContainer,
+  ImageContainer,
+  LoginImage,
+  LoginWrapper,
+} from "./LoginStyle";
 import { NavLink, useHistory } from "react-router-dom";
 import { testEmail } from "../../utils/Reg";
 import { login } from "../../api/user";
@@ -37,52 +45,59 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <LoginWrapper>
       <Navbar primary={"white"} />
       <LoginContainer justify={"center"} align={"middle"}>
-        <FormWrapper span={20}>
-          <LoginText>
-            <strong>Don't have an account? </strong>
-            <NavLink to="/signUp">Sign Up</NavLink>
-          </LoginText>
-          <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-            form={form}
-            //initialValues={{ remember: true }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  validator: checkEmail,
-                },
-                { required: true, message: "Please input your email!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                { required: true, message: "Please input your password!" },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
+        <FormWrapper span={20} lg={6}>
+          <Row align="middle" justify="center" style={{ height: "600px" }}>
+            <Col span={20}>
+              <LoginText>
+                <strong>Don't have an account? </strong>
+                <NavLink to="/signUp">Sign Up</NavLink>
+              </LoginText>
+              <Form
+                name="basic"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                form={form}
+                //initialValues={{ remember: true }}
+                onFinish={onFinish}
+              >
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    {
+                      validator: checkEmail,
+                    },
+                    { required: true, message: "Please input your email!" },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    { required: true, message: "Please input your password!" },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Log In
-              </Button>
-            </Form.Item>
-          </Form>
+                <Form.Item wrapperCol={{ sm: { offset: 8, span: 16 } }}>
+                  <Button type="primary" htmlType="submit">
+                    Log In
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
         </FormWrapper>
+        <ImageContainer lg={18}>
+          <LoginImage src={LoginImageBG} alt="login-1" />
+        </ImageContainer>
       </LoginContainer>
-    </div>
+    </LoginWrapper>
   );
 }

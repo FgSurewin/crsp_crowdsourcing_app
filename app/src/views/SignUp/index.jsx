@@ -1,7 +1,13 @@
 import React from "react";
 import Navbar from "../../components/Navbar";
 import { Form, Input, Button, Select, message } from "antd";
-import { FormWrapper, SignUpContainer, SignUpText } from "./SignUpStyle";
+import {
+  FormWrapper,
+  SignUpContainer,
+  SignUpText,
+  SignUpWrapper,
+  TipText,
+} from "./SignUpStyle";
 import { NavLink, useHistory } from "react-router-dom";
 import { testEmail } from "../../utils/Reg";
 import { signUp } from "../../api/user";
@@ -36,7 +42,7 @@ export default function SignUp() {
   };
 
   return (
-    <div>
+    <SignUpWrapper>
       <Navbar primary={"white"} />
       <SignUpContainer justify={"center"} align={"middle"}>
         <FormWrapper span={20}>
@@ -61,18 +67,21 @@ export default function SignUp() {
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  validator: checkEmail,
-                },
-                { required: true, message: "Please input your email!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+            <div>
+              <TipText>We encourage you to use your university email</TipText>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    validator: checkEmail,
+                  },
+                  { required: true, message: "Please input your email!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </div>
             <Form.Item
               label="Password"
               name="password"
@@ -125,6 +134,6 @@ export default function SignUp() {
           </Form>
         </FormWrapper>
       </SignUpContainer>
-    </div>
+    </SignUpWrapper>
   );
 }
