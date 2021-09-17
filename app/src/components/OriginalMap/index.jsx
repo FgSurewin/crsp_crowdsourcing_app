@@ -179,11 +179,10 @@ const OriginalMap = ({
                   <SingleMarkerInnerText>
                     <strong>Type</strong>: {item.title}
                   </SingleMarkerInnerText>
-                  {item.subtype && (
-                    <SingleMarkerInnerText>
-                      <strong>Subtype</strong>: {item.subtype}
-                    </SingleMarkerInnerText>
-                  )}
+                  <SingleMarkerInnerText>
+                    <strong>Subtype</strong>:{" "}
+                    {item.subtype ? item.subtype : "null"}
+                  </SingleMarkerInnerText>
                   <SingleMarkerInnerText>
                     <strong>LabeledBy</strong>: {item.nickname}
                   </SingleMarkerInnerText>
