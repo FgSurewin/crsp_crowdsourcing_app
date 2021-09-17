@@ -1,4 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import {
+  CollectLabelInterface,
+  PanoMarkerInterface,
+} from "../database/models/collectImage";
 import { LabelInterface } from "../database/models/image";
 
 export interface ImageParams {
@@ -19,6 +23,17 @@ export interface ImageBody {
   id?: string;
   labelArea?: LabelInterface[];
   field?: ImageField;
+}
+export interface CollectImageBody {
+  labeled?: boolean;
+  id?: string;
+  labelArea?: CollectLabelInterface[];
+  field?: ImageField;
+}
+
+export interface CollectStreetViewMarkers {
+  id?: string;
+  markers: PanoMarkerInterface[];
 }
 
 export interface UserBody {

@@ -64,6 +64,11 @@ export default function Navbar({
             </NavbarLink>
           </NavbarItem>
           <NavbarItem>
+            <NavbarLink primary={primary} to="/pureValidation">
+              Validation
+            </NavbarLink>
+          </NavbarItem>
+          <NavbarItem>
             {hasLogin ? (
               <UserAvatar nickname={localNickname} />
             ) : (
@@ -79,6 +84,11 @@ export default function Navbar({
           <MobileItem>
             <MobileLink primary={primary} to="/streetView">
               Start Exploring
+            </MobileLink>
+          </MobileItem>
+          <MobileItem>
+            <MobileLink primary={primary} to="/pureValidation">
+              Validation
             </MobileLink>
           </MobileItem>
           <MobileItem>

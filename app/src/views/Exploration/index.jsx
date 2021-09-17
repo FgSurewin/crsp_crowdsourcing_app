@@ -7,6 +7,8 @@ import { HANDLE_EMPTY, HANDLE_MAP, LOGIN } from "../../redux/actionTypes";
 import { fetchImagesByPano, fetchRandomList } from "../../api/images";
 import Navbar from "../../components/Navbar";
 import {
+  CaptureButton,
+  ExplorationBtnGroup,
   ExplorationContainer,
   ExplorationCover,
   ExplorationPanel,
@@ -15,26 +17,11 @@ import {
   NextButton,
   ShowcaseButton,
   ShowcaseText,
+  CaptureButtonTips,
 } from "./style";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import { deleteAllLocal } from "../../utils/localStorage";
-
-function LinearProgressWithLabel(props) {
-  return (
-    <Box display="flex" alignItems="center">
-      <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
+import { Progress } from "antd";
+import { FILL_STREET_VIEW_INFO } from "../../redux/reducers/streetView";
 
 const defaultInfo = {
   pano: "",
@@ -109,6 +96,11 @@ const Exploration = () => {
     }
   };
 
+  const onPovChanged = (e, map) => {
+    locationInfo.current = e;
+    map.setCenter(locationInfo.current.position);
+  };
+
   return (
     <ExplorationWrapper>
       <Navbar primary="white" isStatic={true} isFixed={true} />
@@ -122,14 +114,13 @@ const Exploration = () => {
               position.heading
             )}
             mapOptions={generateMapOption(position.lat, position.lng)}
-            events={{ onPositionChanged }}
+            events={{ onPositionChanged, onPovChanged }}
           />
           <ExplorationPanel>
             <ExplorationCover>
-              <LinearProgressWithLabel
-                value={parseInt(progress)}
-                variant="determinate"
-              />
+              <div style={{ width: "420px" }}>
+                <Progress percent={progress} />
+              </div>
               {imageList &&
                 imageList.map(({ _id, completed }, index) => (
                   <ExplorationShowcase key={_id}>
@@ -148,24 +139,47 @@ const Exploration = () => {
                   </ExplorationShowcase>
                 ))}
             </ExplorationCover>
-            <NextButton
-              onClick={async () => {
-                try {
-                  const { data } = await fetchRandomList();
-                  dispatch({ type: HANDLE_MAP, payload: data.data });
-                  _first.current = false;
-                } catch (_) {
-                  history.push("/login");
-                  deleteAllLocal();
+            <ExplorationBtnGroup>
+              <CaptureButtonTips>
+                Please help us capture missing street view
+              </CaptureButtonTips>
+              <CaptureButton
+                onClick={() => {
+                  const capturePano = locationInfo.current.pano;
+                  const captureLocation = locationInfo.current.position;
+                  const capturePov = locationInfo.current.pov;
                   dispatch({
-                    type: LOGIN,
-                    payload: { id: "", token: "", nickname: "" },
+                    type: FILL_STREET_VIEW_INFO,
+                    payload: {
+                      pano: capturePano,
+                      location: captureLocation,
+                      pov: capturePov,
+                    },
                   });
-                }
-              }}
-            >
-              NEXT
-            </NextButton>
+                  history.push("/captureImage");
+                }}
+              >
+                CAPTURE
+              </CaptureButton>
+              <NextButton
+                onClick={async () => {
+                  try {
+                    const { data } = await fetchRandomList();
+                    dispatch({ type: HANDLE_MAP, payload: data.data });
+                    _first.current = false;
+                  } catch (_) {
+                    history.push("/login");
+                    deleteAllLocal();
+                    dispatch({
+                      type: LOGIN,
+                      payload: { id: "", token: "", nickname: "" },
+                    });
+                  }
+                }}
+              >
+                NEXT
+              </NextButton>
+            </ExplorationBtnGroup>
           </ExplorationPanel>
         </ExplorationContainer>
       )}

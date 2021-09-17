@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import imageRoute from "./routes/image";
 import userRoute from "./routes/user";
+import collectImageRoute from "./routes/collectImage";
 import mongoose from "mongoose";
 import nunjucks from "nunjucks";
 import morgan from "morgan";
@@ -30,6 +31,7 @@ import { config, databaseLink } from "./database";
   // Initialize Routes
   app.use("/api/image", imageRoute);
   app.use("/api/user", userRoute);
+  app.use("/api/collectImage", collectImageRoute);
 
   // MongoDB Connection
   try {

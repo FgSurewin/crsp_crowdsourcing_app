@@ -13,6 +13,7 @@ export const ExplorationWrapper = styled.section`
 `;
 
 export const ExplorationContainer = styled.div`
+  margin-top: 90px;
   width: 1236px;
   /* margin-left: 30px; */
   display: flex;
@@ -39,6 +40,23 @@ export const ExplorationShowcase = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
+  ${(props) =>
+    props.select
+      ? css`
+          border: 4px solid #a45d5d;
+        `
+      : css`
+          border: 2px solid #3f3d56;
+        `}
+`;
+
+export const ImageListContainer = styled.div`
+  ${(props) =>
+    props.scroll &&
+    css`
+      overflow-y: scroll;
+    `}
+  height: 400px
 `;
 
 export const ExplorationBtnGroup = styled.div`
@@ -84,6 +102,16 @@ export const NextButton = styled(Button)`
 `;
 
 export const CaptureButton = styled(Button)`
+  background-color: ${(props) => props.theme.primaryFont} !important;
+  color: white !important;
+  padding: ${REM(5)} ${REM(100)} !important;
+  font-weight: 500 !important;
+  font-size: ${REM(18)} !important;
+  align-self: right;
+  /* justify-self: right; */
+`;
+
+export const GetImageButton = styled(Button)`
   background-color: ${(props) => props.theme.primaryFont} !important;
   color: white !important;
   padding: ${REM(5)} ${REM(100)} !important;

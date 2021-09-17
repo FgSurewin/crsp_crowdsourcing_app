@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fgsurewin/react_labeltool": "^2.0.0",
+    "@fgsurewin/react_labeltool": "^3.0.0",
     "@material-ui/core": "^4.12.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

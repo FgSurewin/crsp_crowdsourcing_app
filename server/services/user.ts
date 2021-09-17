@@ -38,7 +38,7 @@ export class UserService {
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,
@@ -78,7 +78,7 @@ export class UserService {
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,
@@ -132,7 +132,7 @@ export class UserService {
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,

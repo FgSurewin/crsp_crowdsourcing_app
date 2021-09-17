@@ -7,6 +7,7 @@ const imageController = new ImageController();
 route.get("/test", imageController.test);
 route.get("/getAll", checkToken, imageController.getAllImages);
 route.get("/getRanList", checkToken, imageController.getRandomImageList);
+route.get("/getRandomImage", checkToken, imageController.getRandomImage);
 route.get(
   "/getImagesByPano/:panoId",
   checkToken,

@@ -15,7 +15,7 @@ export class ImageService {
         data: result,
       });
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,
@@ -35,13 +35,13 @@ export class ImageService {
         });
       } else {
         res.json({
-          code: 2000,
+          code: 5000,
           message: "Result is NULL",
           data: null,
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,
@@ -70,7 +70,7 @@ export class ImageService {
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,
@@ -87,7 +87,7 @@ export class ImageService {
       });
       if (collections.length === 0) {
         res.json({
-          code: 2000,
+          code: 4000,
           message: "All images has been labeled!",
           data: null,
         });
@@ -102,7 +102,37 @@ export class ImageService {
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
+      res.json({
+        code: 5000,
+        message: error.message,
+      });
+    }
+  }
+  async getRandomImage(ctx: AppContext): Promise<void> {
+    const { res } = ctx;
+    try {
+      const collections: ImageInterface[] = await ImageModel.find({
+        isLabeled: false,
+        count: { $lt: 3 },
+      });
+      if (collections.length === 0) {
+        res.json({
+          code: 4000,
+          message: "All images has been labeled!",
+          data: null,
+        });
+      } else {
+        const random = Math.floor(Math.random() * collections.length);
+        const result = collections[random];
+        res.json({
+          code: 0,
+          message: "Get one random image ",
+          data: result,
+        });
+      }
+    } catch (e) {
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,
@@ -116,7 +146,7 @@ export class ImageService {
       await ImageModel.updateOne({ _id: id }, { isLabeled: labeled });
       result = true;
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
     }
     return result;
   }
@@ -164,7 +194,7 @@ export class ImageService {
         });
       }
     } catch (e) {
-      const error = new Error(e);
+      const error = new Error(`${e}`);
       res.json({
         code: 5000,
         message: error.message,

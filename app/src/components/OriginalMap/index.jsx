@@ -12,10 +12,16 @@ import {
   MapContainer,
   OriginalMapWrapper,
   Shade,
+  SingleMarkerInnerContainer,
+  SingleMarkerInnerWrapper,
+  SingleMarkerInnerText,
   SmallMap,
   StreetViewContainer,
   StreetViewWindow,
 } from "./style";
+import { useSelector, useDispatch } from "react-redux";
+import SingleMarker from "./SingleMarker";
+import { FILL_STREET_VIEW_SELECT_IMAGE } from "../../redux/reducers/streetView";
 
 const OriginalMap = ({
   mainStyle,
@@ -24,6 +30,7 @@ const OriginalMap = ({
   streetViewOptions,
   events,
   markers,
+  // panoMarkers,
   labelMode,
   labels,
   handleStreetViewClick,
@@ -35,8 +42,14 @@ const OriginalMap = ({
   const [map, setMap] = React.useState(null);
   const [streetView, setStreetView] = React.useState(null);
 
+  /* ---------------------------------- Redux --------------------------------- */
+  const dispatch = useDispatch();
+  const { panoMarkers } = useSelector((state) => state.streetView);
+  // const [clickList, setClickList] = React.useState(
+  //   panoMarkers.map((marker) => ({ id: marker.id, isClick: marker.isClick }))
+  // );
+
   React.useEffect(() => {
-    // console.log("test googleMaps -> ", googleMaps);
     // First initialization
     if (streetView === null && map === null && googleMaps) {
       // console.log("Initialize......");
@@ -58,7 +71,6 @@ const OriginalMap = ({
       isEqual(_mapOptions.current, mapOptions) &&
       isEqual(_streetViewOptions.current, streetViewOptions)
     ) {
-      // console.log("Binding events....");
       map.setStreetView(streetView);
       bindStreetViewEvents(streetView, events, map);
       markersInit(googleMaps, markers, map);
@@ -71,7 +83,6 @@ const OriginalMap = ({
       !isEqual(_mapOptions.current, mapOptions) &&
       !isEqual(_streetViewOptions.current, streetViewOptions)
     ) {
-      // console.log("Initialize Again......");
       _mapOptions.current = mapOptions;
       _streetViewOptions.current = streetViewOptions;
       setMap(new googleMaps.Map(_map.current, combineMapOptions(mapOptions)));
@@ -81,6 +92,15 @@ const OriginalMap = ({
           combineStreetViewOptions(streetViewOptions)
         )
       );
+      // if (googleMaps) {
+      //   panoMarkers.length > 0 &&
+      //     panoMarkerInit(
+      //       googleMaps,
+      //       panoMarkers,
+      //       streetView,
+      //       _streetView.current
+      //     );
+      // }
     }
     return () => {
       if (map) {
@@ -95,7 +115,21 @@ const OriginalMap = ({
     streetViewOptions,
     events,
     markers,
+    panoMarkers,
   ]);
+
+  /* ----------------------- Update Street View Markers ----------------------- */
+  // React.useEffect(() => {
+  //   if (googleMaps) {
+  //     panoMarkers.length > 0 &&
+  //       panoMarkerInit(
+  //         googleMaps,
+  //         panoMarkers,
+  //         streetView,
+  //         _streetView.current
+  //       );
+  //   }
+  // }, [googleMaps, panoMarkers, streetView]);
 
   return (
     <OriginalMapWrapper id="originalMap">
@@ -119,6 +153,44 @@ const OriginalMap = ({
           ))}
         {labelMode && <div className="labelPanel"></div>}
         <StreetViewWindow id="streetView" ref={_streetView} />
+        {googleMaps &&
+          streetView &&
+          panoMarkers.length > 0 &&
+          panoMarkers.map((item) => (
+            <SingleMarker
+              key={item.id}
+              id={item.id}
+              googleMaps={googleMaps}
+              pano={streetView}
+              position={item.pov}
+              title={item.title}
+              anchor={new googleMaps.Point(item.point[0], item.point[1])}
+              size={new googleMaps.Size(20, 20)}
+              container={_streetView.current}
+              clickFunc={() => {
+                dispatch({
+                  type: FILL_STREET_VIEW_SELECT_IMAGE,
+                  payload: item.image_id,
+                });
+              }}
+            >
+              <SingleMarkerInnerWrapper targetType={item.title}>
+                <SingleMarkerInnerContainer>
+                  <SingleMarkerInnerText>
+                    <strong>Type</strong>: {item.title}
+                  </SingleMarkerInnerText>
+                  {item.subtype && (
+                    <SingleMarkerInnerText>
+                      <strong>Subtype</strong>: {item.subtype}
+                    </SingleMarkerInnerText>
+                  )}
+                  <SingleMarkerInnerText>
+                    <strong>LabeledBy</strong>: {item.nickname}
+                  </SingleMarkerInnerText>
+                </SingleMarkerInnerContainer>
+              </SingleMarkerInnerWrapper>
+            </SingleMarker>
+          ))}
       </StreetViewContainer>
       <MapContainer className="mapContainer">
         <Shade className="shade" />

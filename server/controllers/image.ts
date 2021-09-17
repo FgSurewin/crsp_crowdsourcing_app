@@ -51,6 +51,14 @@ export class ImageController {
     await imageService.getRandomImageList({ req, res, next });
   }
 
+  async getRandomImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    await imageService.getRandomImageList({ req, res, next });
+  }
+
   async toggle(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { labeled, id }: ImageBody = req.body;
     if (id) {
