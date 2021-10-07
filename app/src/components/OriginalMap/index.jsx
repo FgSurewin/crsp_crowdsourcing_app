@@ -34,13 +34,16 @@ const OriginalMap = ({
   labelMode,
   labels,
   handleStreetViewClick,
+  onPlaceChange,
 }) => {
   const _map = React.useRef();
   const _streetView = React.useRef();
   const _mapOptions = React.useRef();
   const _streetViewOptions = React.useRef();
+  const _searchInput = React.useRef();
   const [map, setMap] = React.useState(null);
   const [streetView, setStreetView] = React.useState(null);
+  const [autocomplete, setAutocomplete] = React.useState(null);
 
   /* ---------------------------------- Redux --------------------------------- */
   const dispatch = useDispatch();
@@ -50,9 +53,16 @@ const OriginalMap = ({
   // );
 
   React.useEffect(() => {
+    // console.log("--OUTSIDE--");
+    // console.log("-------------------------------------");
+    // console.log("Map -> ", map);
+    // console.log("StreetView -> ", streetView);
+    // console.log("GoogleMaps -> ", googleMaps);
+    // console.log("Autocomplete -> ", autocomplete);
+    // console.log("-------------------------------------");
     // First initialization
     if (streetView === null && map === null && googleMaps) {
-      // console.log("Initialize......");
+      console.log("Initialize......");
       _mapOptions.current = mapOptions;
       _streetViewOptions.current = streetViewOptions;
       setMap(new googleMaps.Map(_map.current, combineMapOptions(mapOptions)));
@@ -62,18 +72,14 @@ const OriginalMap = ({
           combineStreetViewOptions(streetViewOptions)
         )
       );
-    }
-
-    // Binding events
-    if (
-      streetView !== null &&
-      map !== null &&
-      isEqual(_mapOptions.current, mapOptions) &&
-      isEqual(_streetViewOptions.current, streetViewOptions)
-    ) {
-      map.setStreetView(streetView);
-      bindStreetViewEvents(streetView, events, map);
-      markersInit(googleMaps, markers, map);
+      const options = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["address"],
+      };
+      setAutocomplete(
+        new googleMaps.places.Autocomplete(_searchInput.current, options)
+      );
     }
 
     // Update street view
@@ -83,6 +89,7 @@ const OriginalMap = ({
       !isEqual(_mapOptions.current, mapOptions) &&
       !isEqual(_streetViewOptions.current, streetViewOptions)
     ) {
+      console.log("Update street view");
       _mapOptions.current = mapOptions;
       _streetViewOptions.current = streetViewOptions;
       setMap(new googleMaps.Map(_map.current, combineMapOptions(mapOptions)));
@@ -92,16 +99,45 @@ const OriginalMap = ({
           combineStreetViewOptions(streetViewOptions)
         )
       );
-      // if (googleMaps) {
-      //   panoMarkers.length > 0 &&
-      //     panoMarkerInit(
-      //       googleMaps,
-      //       panoMarkers,
-      //       streetView,
-      //       _streetView.current
-      //     );
-      // }
+      const options = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["address"],
+      };
+      setAutocomplete(
+        new googleMaps.places.Autocomplete(_searchInput.current, options)
+      );
     }
+
+    // Binding events
+    if (
+      streetView !== null &&
+      map !== null &&
+      googleMaps !== null
+      // isEqual(_mapOptions.current, mapOptions) &&
+      // isEqual(_streetViewOptions.current, streetViewOptions)
+    ) {
+      console.log("Binding events......");
+      map.setStreetView(streetView);
+      bindStreetViewEvents(streetView, events, map);
+      markersInit(googleMaps, markers, map);
+
+      // Autocomplete -- Places Library
+      autocomplete.bindTo("bounds", map);
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+          // User entered the name of a Place that was not suggested and
+          // pressed the Enter key, or the Place Details request failed.
+          window.alert("No details available for input: '" + place.name + "'");
+          return;
+        }
+
+        onPlaceChange(place);
+      });
+    }
+
     return () => {
       if (map) {
         googleMaps.event.clearInstanceListeners(map);
@@ -115,7 +151,9 @@ const OriginalMap = ({
     streetViewOptions,
     events,
     markers,
-    panoMarkers,
+    // panoMarkers,
+    autocomplete,
+    onPlaceChange,
   ]);
 
   /* ----------------------- Update Street View Markers ----------------------- */
@@ -152,6 +190,7 @@ const OriginalMap = ({
             />
           ))}
         {labelMode && <div className="labelPanel"></div>}
+        <input type="text" style={{ width: "300px" }} ref={_searchInput} />
         <StreetViewWindow id="streetView" ref={_streetView} />
         {googleMaps &&
           streetView &&
@@ -202,7 +241,7 @@ const OriginalMap = ({
 const mapScriptsToProps = ({ api }) => ({
   googleMaps: {
     globalPath: "google.maps",
-    url: `https://maps.googleapis.com/maps/api/js?key=${api}&v=weekly`,
+    url: `https://maps.googleapis.com/maps/api/js?key=${api}&libraries=&v=weekly&channel=2&libraries=places`,
     jsonp: true,
   },
 });

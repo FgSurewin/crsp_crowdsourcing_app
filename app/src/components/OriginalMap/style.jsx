@@ -30,7 +30,7 @@ export const StreetViewContainer = styled.div`
   height: 480px; */
   width: 640px;
   height: 640px;
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 
 export const StreetViewWindow = styled.div`

@@ -38,6 +38,7 @@ import PreviewModal from "../../components/StreetViewOnly/PreviewModal";
 import { storage } from "../../firebase";
 import { FILL_STREET_VIEW_IMAGE } from "../../redux/reducers/streetView";
 import { fetchStreetViewImagesByPano } from "../../api/collectImage";
+import { Modal } from "antd";
 
 const defaultInfo = {
   pano: "",
@@ -101,6 +102,23 @@ const CaptureExploration = () => {
     setShowPreview(false);
     saveReduxPov();
     imgBlob && uploadImage(imgBlob);
+  };
+
+  /* ------------------------------ Autocomplete - Google Places Library ------------------------------ */
+  const [showSearchModal, setShowSearchModal] = React.useState(false);
+  // const _searchInput = React.useRef();
+  // const [searchLocation, setSearchLocation] = React.useState(null);
+
+  const handleShowSearchModal = () => {
+    setShowSearchModal(true);
+  };
+
+  const handleOkSearchModal = () => {
+    setShowSearchModal(false);
+  };
+
+  const handleCancelSearchModal = () => {
+    setShowSearchModal(false);
   };
 
   const saveStreetViewImageInRedux = React.useCallback(
@@ -184,6 +202,45 @@ const CaptureExploration = () => {
   const onPovChanged = (e, map) => {
     locationInfo.current = e;
     map.setCenter(locationInfo.current.position);
+    // console.log("onPovChanged ->", e);
+  };
+
+  const onPlaceChange = async (place) => {
+    // console.log("PLACE -> ", place);
+
+    try {
+      const location = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      };
+      const { data: newMetaData } = await fetchMetadata(
+        process.env.REACT_APP_API_KEY,
+        location
+      );
+      if (newMetaData.status === "OK") {
+        dispatch({ type: FILL_STREET_VIEW_LOCATION, payload: newMetaData });
+      } else {
+        history.push("/home");
+      }
+      const { data: streetViewImages } = await fetchStreetViewImagesByPano(
+        newMetaData.pano_id
+      );
+      if (streetViewImages.code === 0) {
+        dispatch({
+          type: FILL_STREET_VIEW_IMAGE_LIST,
+          payload: streetViewImages.data,
+        });
+      } else {
+        dispatch({
+          type: FILL_STREET_VIEW_WITHOUT_IMAGE_LIST,
+        });
+      }
+      _mount.current = true;
+    } catch (_) {
+      history.push("/login");
+      deleteAllLocal();
+      dispatch({ type: LOGIN, payload: { id: "", token: "", nickname: "" } });
+    }
   };
 
   function saveReduxPov() {
@@ -280,6 +337,7 @@ const CaptureExploration = () => {
               mapOptions={generateMapOption(location.lat, location.lng)}
               events={{ onPositionChanged, onPovChanged }}
               panoMarkers={panoMarkers}
+              onPlaceChange={onPlaceChange}
             />
             <ExplorationPanel>
               <ExplorationCover>
@@ -326,10 +384,12 @@ const CaptureExploration = () => {
                   onClick={async () => {
                     saveStreetViewImageInRedux();
                     _first.current = false;
+                    // setSearchLocation(null);
                   }}
                 >
                   NEXT
                 </NextButton>
+                <NextButton onClick={handleShowSearchModal}>SEARCH</NextButton>
               </ExplorationBtnGroup>
             </ExplorationPanel>
           </ExplorationContainer>
@@ -349,6 +409,19 @@ const CaptureExploration = () => {
           <Progress type="circle" percent={uploadProgress} />
         </UploadProgressContainer>
       )}
+      <Modal
+        title="Basic Modal"
+        visible={showSearchModal}
+        onOk={handleOkSearchModal}
+        onCancel={handleCancelSearchModal}
+      >
+        <p>Enter your expected location below</p>
+        <input
+          type="text"
+          placeholder="Please enter your location..."
+          style={{ width: "300px" }}
+        />
+      </Modal>
     </>
   );
 };

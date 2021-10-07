@@ -44,7 +44,7 @@ export const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: ${REM(90)};
+  height: ${REM(60)};
   padding: 0 30px;
   z-index: 110;
 `;

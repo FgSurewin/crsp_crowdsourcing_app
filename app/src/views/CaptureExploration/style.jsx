@@ -13,7 +13,7 @@ export const ExplorationWrapper = styled.section`
 `;
 
 export const ExplorationContainer = styled.div`
-  margin-top: 90px;
+  margin-top: 50px;
   width: 1236px;
   /* margin-left: 30px; */
   display: flex;
