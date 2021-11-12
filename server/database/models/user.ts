@@ -9,6 +9,10 @@ export interface UserInterface extends Document {
   isSent: boolean;
   isReviewed: boolean;
   images: number;
+  create: number;
+  review: number;
+  checkOld: number;
+  bonus: number;
 }
 
 const UserModel = new Schema({
@@ -41,6 +45,22 @@ const UserModel = new Schema({
     required: true,
   },
   images: {
+    type: Number,
+    required: true,
+  },
+  create: {
+    type: Number,
+    required: true,
+  },
+  review: {
+    type: Number,
+    required: true,
+  },
+  bonus: {
+    type: Number,
+    required: true,
+  },
+  checkOld: {
     type: Number,
     required: true,
   },

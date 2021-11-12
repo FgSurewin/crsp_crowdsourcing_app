@@ -1,5 +1,4 @@
 import React from "react";
-import OriginalMap from "../../components/OriginalMap";
 import { generateMapOption, generateStreetOption } from "./utils";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -38,6 +37,8 @@ import PreviewModal from "../../components/StreetViewOnly/PreviewModal";
 import { storage } from "../../firebase";
 import { FILL_STREET_VIEW_IMAGE } from "../../redux/reducers/streetView";
 import { fetchStreetViewImagesByPano } from "../../api/collectImage";
+import { Modal } from "antd";
+import MapWithGoogleMaps from "../../components/OriginalMap/MapWithGoogleMaps";
 
 const defaultInfo = {
   pano: "",
@@ -51,7 +52,7 @@ const defaultInfo = {
     zoom: 1,
   },
 };
-const CaptureExploration = () => {
+const RegionStreetView = ({ googleMaps }) => {
   /* ------------------------------ Choose Button ----------------------------- */
   /**
    * I have two buttons in this page
@@ -104,8 +105,21 @@ const CaptureExploration = () => {
   };
 
   /* ------------------------------ Autocomplete - Google Places Library ------------------------------ */
+  const [showSearchModal, setShowSearchModal] = React.useState(false);
   // const _searchInput = React.useRef();
   // const [searchLocation, setSearchLocation] = React.useState(null);
+
+  const handleShowSearchModal = () => {
+    setShowSearchModal(true);
+  };
+
+  const handleOkSearchModal = () => {
+    setShowSearchModal(false);
+  };
+
+  const handleCancelSearchModal = () => {
+    setShowSearchModal(false);
+  };
 
   const saveStreetViewImageInRedux = React.useCallback(
     async function () {
@@ -149,9 +163,9 @@ const CaptureExploration = () => {
   );
 
   // Component onMounted
-  React.useEffect(() => {
-    if (!_mount.current) saveStreetViewImageInRedux();
-  }, [saveStreetViewImageInRedux]);
+  //   React.useEffect(() => {
+  //     if (!_mount.current) saveStreetViewImageInRedux();
+  //   }, [saveStreetViewImageInRedux]);
 
   const handlePosition = async (mapInfo) => {
     try {
@@ -177,6 +191,7 @@ const CaptureExploration = () => {
 
   const onPositionChanged = (e, map) => {
     locationInfo.current = e;
+    map.setCenter(locationInfo.current.position);
     if (_first.current) {
       handlePosition(e);
     } else {
@@ -186,10 +201,13 @@ const CaptureExploration = () => {
 
   const onPovChanged = (e, map) => {
     locationInfo.current = e;
+    map.setCenter(locationInfo.current.position);
     // console.log("onPovChanged ->", e);
   };
 
   const onPlaceChange = async (place) => {
+    // console.log("PLACE -> ", place);
+
     try {
       const location = {
         lat: place.geometry.location.lat(),
@@ -307,8 +325,9 @@ const CaptureExploration = () => {
         <Navbar primary="white" isStatic={true} isFixed={true} />
         {pano && (
           <ExplorationContainer>
-            <OriginalMap
+            <MapWithGoogleMaps
               api={process.env.REACT_APP_API_KEY}
+              googleMaps={googleMaps}
               streetViewOptions={generateStreetOption(
                 location.lat,
                 location.lng,
@@ -371,6 +390,7 @@ const CaptureExploration = () => {
                 >
                   NEXT
                 </NextButton>
+                <NextButton onClick={handleShowSearchModal}>SEARCH</NextButton>
               </ExplorationBtnGroup>
             </ExplorationPanel>
           </ExplorationContainer>
@@ -390,8 +410,21 @@ const CaptureExploration = () => {
           <Progress type="circle" percent={uploadProgress} />
         </UploadProgressContainer>
       )}
+      <Modal
+        title="Basic Modal"
+        visible={showSearchModal}
+        onOk={handleOkSearchModal}
+        onCancel={handleCancelSearchModal}
+      >
+        <p>Enter your expected location below</p>
+        <input
+          type="text"
+          placeholder="Please enter your location..."
+          style={{ width: "300px" }}
+        />
+      </Modal>
     </>
   );
 };
 
-export default CaptureExploration;
+export default RegionStreetView;

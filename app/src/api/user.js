@@ -19,3 +19,21 @@ export const addImages = (data) =>
     url: `/user/addImages`,
     data,
   });
+export const addCreateCredit = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/user/addCreateCredit`,
+    data,
+  });
+export const addReviewCredit = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/user/addReviewCredit`,
+    data,
+  });
+export const addValidateCredit = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/user/addValidateCredit`,
+    data,
+  });

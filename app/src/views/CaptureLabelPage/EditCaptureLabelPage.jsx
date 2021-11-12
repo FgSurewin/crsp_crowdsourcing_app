@@ -18,7 +18,7 @@ import {
   fetchStreetViewImageById,
   fetchStreetViewToggle,
 } from "../../api/collectImage";
-import { addImages } from "../../api/user";
+import { addReviewCredit } from "../../api/user";
 import {
   FILL_STREET_VIEW_CLEAR_MARKERS,
   FILL_STREET_VIEW_IMAGE_COMPLETED,
@@ -60,16 +60,16 @@ export default function EditCaptureLabelPage() {
 
   const onCancel = async () => {
     try {
-      await fetchStreetViewToggle({
-        labeled: false,
-        id: params.id,
-      });
       Modal.confirm({
         title: "Warning Message",
         content: "Do you want to leave without confirmation?",
         cancelText: "Cancel",
         onCancel() {},
         onOk() {
+          await fetchStreetViewToggle({
+            labeled: false,
+            id: params.id,
+          });
           history.push("/streetView");
         },
       });
@@ -88,7 +88,7 @@ export default function EditCaptureLabelPage() {
       });
       await fetchStreetViewToggle({ labeled: false, id: params.id });
       const number = progress + 10 === 100 ? 3 : 1;
-      await addImages({ id: userId, number });
+      await addReviewCredit({ id: userId, number });
 
       // Handle Panorama Markers
       const streetViewMarkerList = generatePanoMarkersAtCenter(

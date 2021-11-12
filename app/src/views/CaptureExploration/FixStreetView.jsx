@@ -4,7 +4,7 @@ import { generateMapOption, generateStreetOption } from "./utils";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { LOGIN } from "../../redux/actionTypes";
-import { fetchRandomList } from "../../api/images";
+// import { fetchRandomList } from "../../api/images";
 import Navbar from "../../components/Navbar";
 import {
   CaptureButton,
@@ -51,7 +51,26 @@ const defaultInfo = {
     zoom: 1,
   },
 };
-const CaptureExploration = () => {
+
+/**
+ * This view is only used to collect specific areas' data.
+ * We conduct a evaluation test in some pre-define areas.
+ */
+
+const fixLocations = [
+  { lat: 40.74272, lng: -73.99438 },
+  { lat: 40.742202, lng: -73.995146 },
+  { lat: 40.740962, lng: -73.992174 },
+  { lat: 40.741539, lng: -73.991688 },
+  { lat: 40.740347, lng: -73.992549 },
+  { lat: 40.741577, lng: -73.995471 },
+  { lat: 40.741057, lng: -73.99607 },
+  { lat: 40.739733, lng: -73.992911 },
+  { lat: 40.738219, lng: -73.998904 },
+  { lat: 40.740518, lng: -74.00024 },
+];
+
+const FixStreetView = () => {
   /* ------------------------------ Choose Button ----------------------------- */
   /**
    * I have two buttons in this page
@@ -110,12 +129,13 @@ const CaptureExploration = () => {
   const saveStreetViewImageInRedux = React.useCallback(
     async function () {
       try {
-        const { data } = await fetchRandomList();
-        const list = data.data[0];
-        const location = {
-          lat: list.lat,
-          lng: list.lon,
-        };
+        // const { data } = await fetchRandomList();
+        // const list = data.data[0];
+        // const location = {
+        //   lat: list.lat,
+        //   lng: list.lon,
+        // };
+        const location = fixLocations[Math.floor((Math.random() * 10) % 10)];
         const { data: newMetaData } = await fetchMetadata(
           process.env.REACT_APP_API_KEY,
           location
@@ -187,42 +207,6 @@ const CaptureExploration = () => {
   const onPovChanged = (e, map) => {
     locationInfo.current = e;
     // console.log("onPovChanged ->", e);
-  };
-
-  const onPlaceChange = async (place) => {
-    try {
-      const location = {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      };
-      const { data: newMetaData } = await fetchMetadata(
-        process.env.REACT_APP_API_KEY,
-        location
-      );
-      if (newMetaData.status === "OK") {
-        dispatch({ type: FILL_STREET_VIEW_LOCATION, payload: newMetaData });
-      } else {
-        history.push("/home");
-      }
-      const { data: streetViewImages } = await fetchStreetViewImagesByPano(
-        newMetaData.pano_id
-      );
-      if (streetViewImages.code === 0) {
-        dispatch({
-          type: FILL_STREET_VIEW_IMAGE_LIST,
-          payload: streetViewImages.data,
-        });
-      } else {
-        dispatch({
-          type: FILL_STREET_VIEW_WITHOUT_IMAGE_LIST,
-        });
-      }
-      _mount.current = true;
-    } catch (_) {
-      history.push("/login");
-      deleteAllLocal();
-      dispatch({ type: LOGIN, payload: { id: "", token: "", nickname: "" } });
-    }
   };
 
   function saveReduxPov() {
@@ -319,7 +303,6 @@ const CaptureExploration = () => {
               mapOptions={generateMapOption(location.lat, location.lng)}
               events={{ onPositionChanged, onPovChanged }}
               panoMarkers={panoMarkers}
-              onPlaceChange={onPlaceChange}
             />
             <ExplorationPanel>
               <ExplorationCover>
@@ -394,4 +377,4 @@ const CaptureExploration = () => {
   );
 };
 
-export default CaptureExploration;
+export default FixStreetView;

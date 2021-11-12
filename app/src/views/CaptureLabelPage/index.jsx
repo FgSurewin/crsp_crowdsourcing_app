@@ -15,13 +15,14 @@ import {
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { createImage } from "../../api/collectImage";
+import { addCreateCredit } from "../../api/user";
 
 export default function CaptureLabelPage() {
   /* ---------------------------------- Redux --------------------------------- */
-  const { imgSrc, pov, pano, location, imgSize } = useSelector(
+  const { imgSrc, pov, pano, location, imgSize, progress } = useSelector(
     (state) => state.streetView
   );
-  const { nickname } = useSelector((state) => state.user);
+  const { nickname, id: userId } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   /* --------------------------------- Router --------------------------------- */
@@ -46,6 +47,8 @@ export default function CaptureLabelPage() {
       labeled_area: labelsReverser(value, imgSize),
     });
     await createImage(newImage);
+    const number = progress + 10 === 100 ? 3 : 1;
+    await addCreateCredit({ id: userId, number });
     dispatch({
       type: FILL_STREET_VIEW_MARKERS,
       payload: panoMarkers,

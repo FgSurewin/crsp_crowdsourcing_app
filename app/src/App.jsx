@@ -14,9 +14,11 @@ import { ID, NICKNAME, readLocal, TOKEN } from "./utils/localStorage";
 import "antd/dist/antd.css";
 import CapturePage from "./views/CapturePage";
 import CaptureLabelPage from "./views/CaptureLabelPage";
-import CaptureExploration from "./views/CaptureExploration";
+// import CaptureExploration from "./views/CaptureExploration";
 import EditCaptureLabelPage from "./views/CaptureLabelPage/EditCaptureLabelPage";
 import NotFound from "./views/NotFound";
+import RegionExploration from "./views/RegionExploration";
+import FixStreetView from "./views/CaptureExploration/FixStreetView";
 
 const AppWrapper = styled.div`
   overflow-x: hidden;
@@ -35,7 +37,13 @@ function App() {
   return (
     <AppWrapper>
       <Switch>
-        <ProtectedRoute component={CaptureExploration} path="/streetView" />
+        {/* <ProtectedRoute
+          component={RegionExploration}
+          path="/streetView"
+          api={process.env.REACT_APP_API_KEY}
+        /> */}
+        <ProtectedRoute component={FixStreetView} path="/streetView" />
+        {/* <ProtectedRoute component={CaptureExploration} path="/streetView" /> */}
         {/* <ProtectedRoute component={LabelPage} path="/validation/:id" /> */}
         <ProtectedRoute component={PureValidation} path="/pureValidation" />
         <ProtectedRoute component={CapturePage} path="/captureImage" />

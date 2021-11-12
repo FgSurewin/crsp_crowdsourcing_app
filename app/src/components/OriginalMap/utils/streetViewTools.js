@@ -18,6 +18,9 @@ export function bindStreetViewEvents(street, events, map) {
         street.getPosition(),
         street.getPov()
       );
+      const pos = street.getPosition();
+      const center = { lat: pos.lat(), lng: pos.lng() };
+      map.panTo(center);
       events.onPositionChanged(result, map);
     }
   });

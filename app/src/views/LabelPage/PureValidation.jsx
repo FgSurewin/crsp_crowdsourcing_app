@@ -8,11 +8,28 @@ import {
   addLabeledArea,
   fetchRandomImage,
 } from "../../api/images";
-import { addImages } from "../../api/user";
+import { addValidateCredit } from "../../api/user";
 import { ReactLabelTool } from "@fgsurewin/react_labeltool";
 import { labelsDecorator, typeConfig, labelsReverser } from "./utils";
 import { HANDLE_COMPLETED, LOGIN } from "../../redux/actionTypes";
 import { deleteAllLocal } from "../../utils/localStorage";
+import { Spin } from "antd";
+import styled from "styled-components/macro";
+
+const LoadingEffectContainer = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const LoadingEffect = (
+  <LoadingEffectContainer>
+    <Spin size="large"></Spin>
+  </LoadingEffectContainer>
+);
 
 export default function LabelPage() {
   const [state, setState] = React.useState(null);
@@ -29,7 +46,6 @@ export default function LabelPage() {
     async function () {
       try {
         const { data } = await fetchRandomImage();
-        console.log("TEST -> ", data.data[0]);
         _state.current = data.data[0];
         setState(data.data[0]);
         _mount.current = true;
@@ -89,10 +105,11 @@ export default function LabelPage() {
       dispatch({ type: HANDLE_COMPLETED, payload: state["_id"] });
       await fetchToggle({ labeled: false, id: state["_id"] });
       const number = progress + 10 === 100 ? 3 : 1;
-      await addImages({ id: userId, number });
+      await addValidateCredit({ id: userId, number });
 
       // Get new image
       _mount.current = false;
+      setState(null);
       loadFunction();
     } catch (_) {
       history.push("/login");
@@ -103,7 +120,7 @@ export default function LabelPage() {
 
   return (
     <div>
-      {state && (
+      {state ? (
         <ReactLabelTool
           Logo={Logo}
           typeConfig={typeConfig}
@@ -112,6 +129,8 @@ export default function LabelPage() {
           handleSubmit={onSubmit}
           handleBack={onCancel}
         />
+      ) : (
+        LoadingEffect
       )}
     </div>
   );

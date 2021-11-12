@@ -22,11 +22,11 @@ const initialState = {
     pitch: 0,
     zoom: 1,
   },
+  progress: 0,
+  panoMarkers: [],
+  images: [],
   imgSize: [],
   imgSrc: "",
-  images: [],
-  panoMarkers: [],
-  progress: 0,
   selectImage: null,
 };
 

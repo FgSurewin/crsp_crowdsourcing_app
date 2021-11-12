@@ -8,5 +8,8 @@ const userController = new UserController();
 route.post("/addUser", userController.addUser);
 route.post("/login", userController.login);
 route.post("/addImages", userController.updateImage);
+route.post("/addCreateCredit", userController.addCreateCredit);
+route.post("/addReviewCredit", userController.addReviewCredit);
+route.post("/addValidateCredit", userController.addValidateCredit);
 
 export default route;

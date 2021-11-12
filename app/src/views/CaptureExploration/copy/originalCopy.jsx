@@ -38,6 +38,7 @@ import PreviewModal from "../../components/StreetViewOnly/PreviewModal";
 import { storage } from "../../firebase";
 import { FILL_STREET_VIEW_IMAGE } from "../../redux/reducers/streetView";
 import { fetchStreetViewImagesByPano } from "../../api/collectImage";
+import { Modal } from "antd";
 
 const defaultInfo = {
   pano: "",
@@ -104,8 +105,21 @@ const CaptureExploration = () => {
   };
 
   /* ------------------------------ Autocomplete - Google Places Library ------------------------------ */
+  const [showSearchModal, setShowSearchModal] = React.useState(false);
   // const _searchInput = React.useRef();
   // const [searchLocation, setSearchLocation] = React.useState(null);
+
+  const handleShowSearchModal = () => {
+    setShowSearchModal(true);
+  };
+
+  const handleOkSearchModal = () => {
+    setShowSearchModal(false);
+  };
+
+  const handleCancelSearchModal = () => {
+    setShowSearchModal(false);
+  };
 
   const saveStreetViewImageInRedux = React.useCallback(
     async function () {
@@ -371,6 +385,7 @@ const CaptureExploration = () => {
                 >
                   NEXT
                 </NextButton>
+                <NextButton onClick={handleShowSearchModal}>SEARCH</NextButton>
               </ExplorationBtnGroup>
             </ExplorationPanel>
           </ExplorationContainer>
@@ -390,6 +405,19 @@ const CaptureExploration = () => {
           <Progress type="circle" percent={uploadProgress} />
         </UploadProgressContainer>
       )}
+      <Modal
+        title="Basic Modal"
+        visible={showSearchModal}
+        onOk={handleOkSearchModal}
+        onCancel={handleCancelSearchModal}
+      >
+        <p>Enter your expected location below</p>
+        <input
+          type="text"
+          placeholder="Please enter your location..."
+          style={{ width: "300px" }}
+        />
+      </Modal>
     </>
   );
 };

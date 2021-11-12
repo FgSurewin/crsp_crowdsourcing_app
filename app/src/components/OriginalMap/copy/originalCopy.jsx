@@ -40,8 +40,10 @@ const OriginalMap = ({
   const _streetView = React.useRef();
   const _mapOptions = React.useRef();
   const _streetViewOptions = React.useRef();
+  const _searchInput = React.useRef();
   const [map, setMap] = React.useState(null);
   const [streetView, setStreetView] = React.useState(null);
+  const [autocomplete, setAutocomplete] = React.useState(null);
 
   /* ---------------------------------- Redux --------------------------------- */
   const dispatch = useDispatch();
@@ -70,6 +72,17 @@ const OriginalMap = ({
           combineStreetViewOptions(streetViewOptions)
         )
       );
+      /* -------------------------------------------------------------------------- */
+      /*                                AutoComplete                                */
+      /* -------------------------------------------------------------------------- */
+      const options = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["address"],
+      };
+      setAutocomplete(
+        new googleMaps.places.Autocomplete(_searchInput.current, options)
+      );
     }
 
     // Update street view
@@ -89,6 +102,14 @@ const OriginalMap = ({
           combineStreetViewOptions(streetViewOptions)
         )
       );
+      const options = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["address"],
+      };
+      setAutocomplete(
+        new googleMaps.places.Autocomplete(_searchInput.current, options)
+      );
     }
 
     // Binding events
@@ -103,6 +124,21 @@ const OriginalMap = ({
       map.setStreetView(streetView);
       bindStreetViewEvents(streetView, events, map);
       markersInit(googleMaps, markers, map);
+
+      // Autocomplete -- Places Library
+      autocomplete.bindTo("bounds", map);
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+          // User entered the name of a Place that was not suggested and
+          // pressed the Enter key, or the Place Details request failed.
+          window.alert("No details available for input: '" + place.name + "'");
+          return;
+        }
+
+        onPlaceChange(place);
+      });
     }
 
     return () => {
@@ -119,8 +155,22 @@ const OriginalMap = ({
     events,
     markers,
     // panoMarkers,
+    autocomplete,
     onPlaceChange,
   ]);
+
+  /* ----------------------- Update Street View Markers ----------------------- */
+  // React.useEffect(() => {
+  //   if (googleMaps) {
+  //     panoMarkers.length > 0 &&
+  //       panoMarkerInit(
+  //         googleMaps,
+  //         panoMarkers,
+  //         streetView,
+  //         _streetView.current
+  //       );
+  //   }
+  // }, [googleMaps, panoMarkers, streetView]);
 
   return (
     <OriginalMapWrapper id="originalMap">
@@ -143,6 +193,7 @@ const OriginalMap = ({
             />
           ))}
         {labelMode && <div className="labelPanel"></div>}
+        <input type="text" style={{ width: "300px" }} ref={_searchInput} />
         <StreetViewWindow id="streetView" ref={_streetView} />
         {googleMaps &&
           streetView &&
