@@ -17,8 +17,7 @@ export default function ProtectedRoute({
   const localToken = readLocal(TOKEN);
 
   const hasLogin = token || localToken;
-
-  if (hasLogin)
+  if (hasLogin) {
     return <Route path={path} render={() => <Component {...rest} />} />;
-  else return <Redirect from={location.pathname} to="/login" />;
+  } else return <Redirect from={location.pathname} to="/login" />;
 }

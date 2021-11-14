@@ -58,16 +58,17 @@ const defaultInfo = {
  */
 
 const fixLocations = [
-  { lat: 40.74272, lng: -73.99438 },
+  { lat: 40.775728, lng: -73.960596 },
   { lat: 40.742202, lng: -73.995146 },
-  { lat: 40.740962, lng: -73.992174 },
-  { lat: 40.741539, lng: -73.991688 },
-  { lat: 40.740347, lng: -73.992549 },
-  { lat: 40.741577, lng: -73.995471 },
-  { lat: 40.741057, lng: -73.99607 },
-  { lat: 40.739733, lng: -73.992911 },
-  { lat: 40.738219, lng: -73.998904 },
-  { lat: 40.740518, lng: -74.00024 },
+  { lat: 40.765263, lng: -73.985419 },
+  { lat: 40.757531, lng: -73.980607 },
+  { lat: 40.758351, lng: -73.990351 },
+  { lat: 40.768265, lng: -73.988505 },
+  { lat: 40.761065, lng: -73.983162 },
+  { lat: 40.755505, lng: -73.993538 },
+  { lat: 40.746906, lng: -73.996392 },
+  { lat: 40.742086, lng: -74.000236 },
+  { lat: 40.759886, lng: -73.968732 },
 ];
 
 const FixStreetView = () => {
@@ -99,6 +100,7 @@ const FixStreetView = () => {
     pov,
     selectImage,
   } = useSelector((state) => state.streetView);
+  const { nickname } = useSelector((state) => state.user);
 
   // To solve image list problem
   // const imageList = images.length > 0 ? images : null;
@@ -135,7 +137,8 @@ const FixStreetView = () => {
         //   lat: list.lat,
         //   lng: list.lon,
         // };
-        const location = fixLocations[Math.floor((Math.random() * 10) % 10)];
+        const location =
+          fixLocations[Math.floor((Math.random() * 10) % fixLocations.length)];
         const { data: newMetaData } = await fetchMetadata(
           process.env.REACT_APP_API_KEY,
           location
@@ -311,25 +314,33 @@ const FixStreetView = () => {
                 </div>
                 <ImageListContainer scroll={imageList.length >= 4}>
                   {imageList.length > 0 &&
-                    imageList.map(({ _id, completed, image_id }, index) => (
-                      <ExplorationShowcase
-                        key={_id + index}
-                        select={selectImage === image_id}
-                      >
-                        <ShowcaseText finished={completed.toString()}>
-                          Image - {index}
-                        </ShowcaseText>
-                        <ShowcaseButton
-                          finished={completed.toString()}
-                          onClick={() => {
-                            history.push(`/editCaptureLabelPage/${_id}`);
-                          }}
-                          disabled={completed}
+                    imageList.map(
+                      ({ _id, creator, image_id, count }, index) => (
+                        <ExplorationShowcase
+                          key={_id + index}
+                          select={selectImage === image_id}
                         >
-                          {completed ? "completed" : "view"}
-                        </ShowcaseButton>
-                      </ExplorationShowcase>
-                    ))}
+                          <ShowcaseText
+                            finished={count === 3 ? "true" : "false"}
+                          >
+                            Image - {index}
+                          </ShowcaseText>
+                          <ShowcaseButton
+                            finished={count === 3 ? "true" : "false"}
+                            onClick={() => {
+                              history.push(`/editCaptureLabelPage/${_id}`);
+                            }}
+                            disabled={count === 3}
+                          >
+                            {count === 3
+                              ? "validated"
+                              : creator === nickname
+                              ? "modify"
+                              : "review"}
+                          </ShowcaseButton>
+                        </ExplorationShowcase>
+                      )
+                    )}
                 </ImageListContainer>
               </ExplorationCover>
               <ExplorationBtnGroup>

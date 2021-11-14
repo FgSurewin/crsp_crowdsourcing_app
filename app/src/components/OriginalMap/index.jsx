@@ -60,7 +60,7 @@ const OriginalMap = ({
     // console.log("-------------------------------------");
     // First initialization
     if (streetView === null && map === null && googleMaps) {
-      console.log("Initialize......");
+      // console.log("Initialize......");
       _mapOptions.current = mapOptions;
       _streetViewOptions.current = streetViewOptions;
       setMap(new googleMaps.Map(_map.current, combineMapOptions(mapOptions)));
@@ -79,7 +79,7 @@ const OriginalMap = ({
       !isEqual(_mapOptions.current, mapOptions) &&
       !isEqual(_streetViewOptions.current, streetViewOptions)
     ) {
-      console.log("Update street view");
+      // console.log("Update street view");
       _mapOptions.current = mapOptions;
       _streetViewOptions.current = streetViewOptions;
       setMap(new googleMaps.Map(_map.current, combineMapOptions(mapOptions)));
@@ -99,7 +99,7 @@ const OriginalMap = ({
       isEqual(_mapOptions.current, mapOptions) &&
       isEqual(_streetViewOptions.current, streetViewOptions)
     ) {
-      console.log("Binding events......");
+      // console.log("Binding events......");
       map.setStreetView(streetView);
       bindStreetViewEvents(streetView, events, map);
       markersInit(googleMaps, markers, map);

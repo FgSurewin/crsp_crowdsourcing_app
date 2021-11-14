@@ -15,55 +15,58 @@ export interface UserInterface extends Document {
   bonus: number;
 }
 
-const UserModel = new Schema({
-  nickname: {
-    type: String,
-    required: true,
+const UserModel = new Schema(
+  {
+    nickname: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+    },
+    institution: {
+      type: String,
+      required: true,
+    },
+    isSent: {
+      type: Boolean,
+      required: true,
+    },
+    isReviewed: {
+      type: Boolean,
+      required: true,
+    },
+    images: {
+      type: Number,
+      required: true,
+    },
+    create: {
+      type: Number,
+      required: true,
+    },
+    review: {
+      type: Number,
+      required: true,
+    },
+    bonus: {
+      type: Number,
+      required: true,
+    },
+    checkOld: {
+      type: Number,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-  },
-  institution: {
-    type: String,
-    required: true,
-  },
-  isSent: {
-    type: Boolean,
-    required: true,
-  },
-  isReviewed: {
-    type: Boolean,
-    required: true,
-  },
-  images: {
-    type: Number,
-    required: true,
-  },
-  create: {
-    type: Number,
-    required: true,
-  },
-  review: {
-    type: Number,
-    required: true,
-  },
-  bonus: {
-    type: Number,
-    required: true,
-  },
-  checkOld: {
-    type: Number,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 export default mongoose.model<UserInterface>("User", UserModel);

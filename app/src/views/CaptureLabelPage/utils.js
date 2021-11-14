@@ -49,7 +49,7 @@ export const labelsDecorator = (list, image_size) => {
   return list.map((item) => parseLabel(item, image_size));
 };
 
-const reverseLabel = (item, image_size) => {
+const reverseLabel = (item, image_size, nickname) => {
   const left = (item.x * image_size[0]) / WIDTH;
   const top = (item.y * image_size[1]) / HEIGHT;
   const width = (item.width * image_size[0]) / WIDTH;
@@ -65,11 +65,12 @@ const reverseLabel = (item, image_size) => {
     label_id: item.id,
     subtype,
     label: item.type,
+    labeledBy: nickname,
   };
 };
 
-export const labelsReverser = (list, image_size = [3584, 2560]) => {
-  return list.map((item) => reverseLabel(item, image_size));
+export const labelsReverser = (list, image_size = [3584, 2560], nickname) => {
+  return list.map((item) => reverseLabel(item, image_size, nickname));
 };
 
 export function generateImage({
@@ -81,6 +82,7 @@ export function generateImage({
   pov,
   labeled_area,
   panoMarkers,
+  nickname,
 }) {
   return {
     image_id,
@@ -94,6 +96,7 @@ export function generateImage({
     labeled_area,
     panoMarkers,
     pov,
+    creator: nickname,
   };
 }
 
@@ -132,6 +135,7 @@ export function generatePanoMarkersAtCenter(labels, pov, image_id, nickname) {
       subtype: item.subtype ? item.subtype : null,
       point: [0, 0],
       image_id,
+      label_id: item.id,
       nickname,
     };
   });

@@ -21,7 +21,6 @@ myService.interceptors.request.use(
 
 myService.interceptors.response.use(
   (res) => {
-    // console.log("res ->", res);
     if (res.data.code === 2000) {
       message.error(res.data.message);
       // window.location.href = "/home";

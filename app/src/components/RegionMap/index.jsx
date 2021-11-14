@@ -23,7 +23,7 @@ const combineMapOptions = (options) =>
 export default function RegionMap({ googleMaps }) {
   const _regionMap = React.useRef();
   const [regionMap, setRegionMap] = React.useState(null);
-  const [streetLine, setStreetLine] = React.useState(null);
+  // const [streetLine, setStreetLine] = React.useState(null);
 
   React.useEffect(() => {
     if (regionMap === null) {
@@ -36,9 +36,9 @@ export default function RegionMap({ googleMaps }) {
           })
         )
       );
-      setStreetLine(new googleMaps.Data());
+      // setStreetLine(new googleMaps.Data());
     }
-    if (regionMap !== null && streetLine !== null) {
+    if (regionMap !== null) {
       // streetLine.loadGeoJson(GEOJson2);
       // streetLine.setMap(regionMap);
       // regionMap.addListener("zoom_changed", () => {

@@ -44,9 +44,10 @@ export default function CaptureLabelPage() {
       pov,
       imgSrc,
       panoMarkers,
-      labeled_area: labelsReverser(value, imgSize),
+      labeled_area: labelsReverser(value, imgSize, nickname),
+      nickname,
     });
-    await createImage(newImage);
+    const newImageFromDB = await createImage(newImage);
     const number = progress + 10 === 100 ? 3 : 1;
     await addCreateCredit({ id: userId, number });
     dispatch({
@@ -55,7 +56,7 @@ export default function CaptureLabelPage() {
     });
     dispatch({
       type: FILL_STREET_VIEW_ADD_IMAGE,
-      payload: { ...newImage, completed: true },
+      payload: newImageFromDB.data.data,
     });
     history.push("streetView");
   };

@@ -17,7 +17,7 @@ import CaptureLabelPage from "./views/CaptureLabelPage";
 // import CaptureExploration from "./views/CaptureExploration";
 import EditCaptureLabelPage from "./views/CaptureLabelPage/EditCaptureLabelPage";
 import NotFound from "./views/NotFound";
-import RegionExploration from "./views/RegionExploration";
+// import RegionExploration from "./views/RegionExploration";
 import FixStreetView from "./views/CaptureExploration/FixStreetView";
 
 const AppWrapper = styled.div`

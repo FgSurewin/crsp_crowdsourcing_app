@@ -1,3 +1,4 @@
+import { ModifierInterface } from "./../database/models/collectImage";
 import { Request, Response, NextFunction } from "express";
 import {
   CollectLabelInterface,
@@ -29,6 +30,7 @@ export interface CollectImageBody {
   id?: string;
   labelArea?: CollectLabelInterface[];
   field?: ImageField;
+  modifier?: ModifierInterface;
 }
 
 export interface CollectStreetViewMarkers {

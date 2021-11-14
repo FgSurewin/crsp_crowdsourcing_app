@@ -12,7 +12,8 @@ route.get(
 );
 route.get("/getOneById/:Id", checkToken, collectImageController.getImageById);
 route.post("/toggle", checkToken, collectImageController.toggle);
-route.post("/addLabelArea", checkToken, collectImageController.addLabelArea);
+route.post("/addCount", checkToken, collectImageController.addCount);
+route.post("/addModifier", checkToken, collectImageController.addModifier);
 route.post(
   "/addMarkers",
   checkToken,

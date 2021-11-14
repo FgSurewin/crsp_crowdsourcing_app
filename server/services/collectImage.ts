@@ -1,3 +1,4 @@
+import { ModifierInterface } from "./../database/models/collectImage";
 import { AppContext, ImageField } from "../types";
 import CollectImageModel, {
   CollectImageInterface,
@@ -154,30 +155,85 @@ export class CollectImageService {
       });
     }
   }
-  async addLabelArea(
-    ctx: AppContext,
-    labels: CollectLabelInterface[],
-    id: string,
-    field: ImageField,
-    count: number
-  ): Promise<void> {
+
+  /**
+   *
+   * @param ctx
+   * @param id image id
+   *
+   * Date: 11/12/2021
+   * This function is used to add review count when somebody confirm the image.
+   */
+  async addCount(ctx: AppContext, id: string): Promise<void> {
     const { res } = ctx;
     try {
-      const { ok } = await CollectImageModel.updateOne(
-        { _id: id },
-        { [field]: labels, labeled_area: labels, count }
-      );
-      const result = await CollectImageModel.findOne({ _id: id });
-      if (ok === 1) {
-        res.json({
-          code: 0,
-          message: "Add Successfully",
-          data: result,
-        });
+      const result = await CollectImageModel.findOne({
+        _id: id,
+      });
+      if (result) {
+        const { ok } = await CollectImageModel.updateOne(
+          { _id: id },
+          { count: result.count + 1 }
+        );
+        if (ok === 1) {
+          res.json({
+            code: 0,
+            message: "Add count successfully",
+            data: result,
+          });
+        } else {
+          res.json({
+            code: 4000,
+            message: "Field to add count",
+          });
+        }
       } else {
         res.json({
-          code: 4000,
-          message: "Field name is invalid",
+          code: 2000,
+          message: "Result is NULL",
+          data: result,
+        });
+      }
+    } catch (e) {
+      const error = new Error(`${e}`);
+      res.json({
+        code: 5000,
+        message: error.message,
+      });
+    }
+  }
+
+  async addModifier(ctx: AppContext, id: string, modifier: ModifierInterface) {
+    const { res } = ctx;
+    try {
+      const result = await CollectImageModel.findOne({
+        _id: id,
+      });
+      if (result) {
+        const { ok } = await CollectImageModel.updateOne(
+          { _id: id },
+          {
+            labeled_area: modifier.labels,
+            modifiers: [...result.modifiers, modifier],
+          }
+        );
+        if (ok === 1) {
+          res.json({
+            code: 0,
+            message: "Add modifier successfully",
+            data: result,
+          });
+        } else {
+          res.json({
+            code: 4000,
+            message: "Field to add modifier",
+          });
+        }
+      } else {
+        res.json({
+          code: 2000,
+          message: "Result is NULL",
+          data: result,
         });
       }
     } catch (e) {

@@ -72,39 +72,35 @@ export class CollectImageController {
         message: "Post body is invalid.",
       });
   }
-  async addLabelArea(
+
+  async addCount(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { labelArea, id }: CollectImageBody = req.body;
-    const result: CollectImageInterface | null =
-      await CollectImageModel.findById({
-        _id: id,
-      });
-    if (result) {
-      if (labelArea && id && result.count < 3) {
-        const newCount = result.count + 1;
-        const newField = getField(newCount);
-        await collectImageService.addLabelArea(
-          { req, res, next },
-          labelArea,
-          id,
-          newField,
-          newCount
-        );
-      } else {
-        res.json({
-          code: 6000,
-          message: "Post body is invalid OR count is larger than 3.",
-        });
-      }
-    } else {
+    const { id }: CollectImageBody = req.body;
+    if (id) {
+      await collectImageService.addCount({ req, res, next }, id);
+    } else
       res.json({
-        code: "6000",
-        message: "Image ID is invalid.",
+        code: 6000,
+        message: "Post body is invalid.",
       });
-    }
+  }
+
+  async addModifier(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const { id, modifier }: CollectImageBody = req.body;
+    if (id && modifier) {
+      await collectImageService.addModifier({ req, res, next }, id, modifier);
+    } else
+      res.json({
+        code: 6000,
+        message: "Post body is invalid.",
+      });
   }
 
   async addStreetViewMarkers(

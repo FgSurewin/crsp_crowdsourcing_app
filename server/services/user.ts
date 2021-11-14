@@ -27,6 +27,8 @@ export class UserService {
             create: 0,
             review: 0,
             images: 0,
+            bonus: 0,
+            checkOld: 0,
           };
           await UserModel.create(newUser);
           res.json({

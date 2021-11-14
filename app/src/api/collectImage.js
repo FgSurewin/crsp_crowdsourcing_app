@@ -26,6 +26,7 @@ export const fetchStreetViewImageById = (id) =>
     url: `/collectImage/getOneById/${id}`,
   });
 
+// This api has already been delete - 11/13/21
 export const addStreetViewLabeledArea = (data) =>
   myService.request({
     method: "POST",
@@ -36,5 +37,19 @@ export const addStreetViewMarkers = (data) =>
   myService.request({
     method: "POST",
     url: `/collectImage/addMarkers`,
+    data,
+  });
+
+export const addStreetViewCount = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/collectImage/addCount`,
+    data,
+  });
+
+export const addStreetViewModifier = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/collectImage/addModifier`,
     data,
   });

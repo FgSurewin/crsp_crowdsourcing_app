@@ -63,9 +63,7 @@ function streetViewReducer(state = initialState, action) {
       });
       return {
         ...state,
-        images: [...list].map((item) =>
-          Object.assign(item, { completed: false })
-        ),
+        images: list,
         panoMarkers: finalStreetMarkerList,
       };
 
