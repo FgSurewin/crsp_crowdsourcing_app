@@ -47,6 +47,13 @@ export const addStreetViewCount = (data) =>
     data,
   });
 
+export const clearStreetViewCount = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/collectImage/clearCount`,
+    data,
+  });
+
 export const addStreetViewModifier = (data) =>
   myService.request({
     method: "POST",

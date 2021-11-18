@@ -63,11 +63,11 @@ export default function Navbar({
               Start Exploring
             </NavbarLink>
           </NavbarItem>
-          <NavbarItem>
+          {/* <NavbarItem>
             <NavbarLink primary={primary} to="/pureValidation">
               Validation
             </NavbarLink>
-          </NavbarItem>
+          </NavbarItem> */}
           <NavbarItem>
             {hasLogin ? (
               <UserAvatar nickname={localNickname} />
@@ -86,11 +86,11 @@ export default function Navbar({
               Start Exploring
             </MobileLink>
           </MobileItem>
-          <MobileItem>
+          {/* <MobileItem>
             <MobileLink primary={primary} to="/pureValidation">
               Validation
             </MobileLink>
-          </MobileItem>
+          </MobileItem> */}
           <MobileItem>
             {hasLogin ? (
               <UserAvatar nickname={localNickname} />

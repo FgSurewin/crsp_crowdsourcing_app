@@ -16,11 +16,14 @@ import {
   addStreetViewCount,
   addStreetViewMarkers,
   addStreetViewModifier,
+  clearStreetViewCount,
   fetchStreetViewImageById,
   fetchStreetViewToggle,
 } from "../../api/collectImage";
-import { addReviewCredit } from "../../api/user";
+import { addReviewCredit, addNumberByType } from "../../api/user";
 import {
+  ADD_IMAGE_COUNT,
+  CLEAR_IMAGE_COUNT,
   FILL_STREET_VIEW_CLEAR_MARKERS,
   FILL_STREET_VIEW_MARKERS,
 } from "../../redux/reducers/streetView";
@@ -130,8 +133,31 @@ export default function EditCaptureLabelPage() {
           type: FILL_STREET_VIEW_MARKERS,
           payload: finalStreetViewMarkerList,
         });
-
         history.push("/streetView");
+      }
+
+      async function addLabelNumberByType() {
+        const labelsByCreator = final_labels.filter(
+          (item) => item.labeledBy === state.creator
+        ).length;
+        const revise = Math.abs(labelsByCreator - state["init_labels"].length);
+        await addNumberByType({
+          name: state["creator"],
+          number: revise,
+          type: "revise",
+        });
+        const modifiersList = final_labels.filter(
+          (item) => item.labeledBy !== state.creator
+        );
+        if (modifiersList.length > 0) {
+          modifiersList.forEach(async (item) => {
+            await addNumberByType({
+              name: item.labeledBy,
+              number: 1,
+              type: "modify",
+            });
+          });
+        }
       }
 
       // There are four situations:
@@ -154,13 +180,26 @@ export default function EditCaptureLabelPage() {
         await addStreetViewCount({ id: params.id });
         const number = progress + 10 === 100 ? 3 : 1;
         await addReviewCredit({ id: userId, number });
+        if (state["count"] === 2) addLabelNumberByType();
+        dispatch({
+          type: ADD_IMAGE_COUNT,
+          payload: {
+            image_id: state["image_id"],
+          },
+        });
         history.push("/streetView");
       }
 
       // 4. Different person, Different labels, Get modify credit
       if (!samePerson && !same) {
         message.success("Modify successfully!");
-        await addStreetViewCount({ id: params.id });
+        await clearStreetViewCount({ id: params.id });
+        dispatch({
+          type: CLEAR_IMAGE_COUNT,
+          payload: {
+            image_id: state["image_id"],
+          },
+        });
         const number = progress + 10 === 100 ? 3 : 1;
         await addReviewCredit({ id: userId, number });
         saveDifferentLabels();

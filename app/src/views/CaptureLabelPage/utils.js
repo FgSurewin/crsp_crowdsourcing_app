@@ -94,6 +94,7 @@ export function generateImage({
     isLabeled: false,
     count: 0,
     labeled_area,
+    init_labels: labeled_area,
     panoMarkers,
     pov,
     creator: nickname,

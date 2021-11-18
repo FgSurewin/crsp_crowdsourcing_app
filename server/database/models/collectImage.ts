@@ -51,9 +51,7 @@ export interface CollectImageInterface extends Document {
   isLabeled: boolean;
   count: number;
   labeled_area: CollectLabelInterface[];
-  user_one?: CollectLabelInterface[];
-  user_two?: CollectLabelInterface[];
-  user_three?: CollectLabelInterface[];
+  init_labels: CollectLabelInterface[];
   panoMarkers: PanoMarkerInterface[];
   pov: PovInterface;
   creator: string;
@@ -122,6 +120,23 @@ const CollectImageModel = new Schema(
       require: true,
     },
     labeled_area: {
+      type: [
+        {
+          label_id: String,
+          box: {
+            left: Number,
+            top: Number,
+            width: Number,
+            height: Number,
+          },
+          label: String,
+          subtype: { type: String, required: false },
+          labeledBy: String,
+        },
+      ],
+      required: true,
+    },
+    init_labels: {
       type: [
         {
           label_id: String,

@@ -1,5 +1,9 @@
 import { SECRET } from "./../database/index";
-import { LoginBody, UpdateImageBody } from "./../types/index";
+import {
+  LoginBody,
+  UpdateImageBody,
+  UpdateUserLabelsBody,
+} from "./../types/index";
 import { AppContext, UserBody } from "../types";
 import UserModel, { UserInterface } from "../database/models/user";
 import bcrypt from "bcrypt";
@@ -24,6 +28,9 @@ export class UserService {
             password: encodePassword,
             isSent: false,
             isReviewed: true,
+            label: 0,
+            revise: 0,
+            modify: 0,
             create: 0,
             review: 0,
             images: 0,
@@ -215,6 +222,49 @@ export class UserService {
           res.json({
             code: 4000,
             message: "Failed to validate",
+          });
+        }
+      } else {
+        res.json({
+          code: 2000,
+          message: "User doesn't exist!",
+          data: result,
+        });
+      }
+    } catch (e) {
+      const error = new Error(`${e}`);
+      res.json({
+        code: 5000,
+        message: error.message,
+      });
+    }
+  }
+
+  async addNumberByType(ctx: AppContext, body: UpdateUserLabelsBody) {
+    const { res } = ctx;
+    const { number, name, type } = body;
+    console.log("body -> ", body);
+    try {
+      const result: UserInterface | null = await UserModel.findOne({
+        nickname: name,
+      });
+      if (result) {
+        const { ok } = await UserModel.updateOne(
+          { nickname: name },
+          {
+            [type]: result[type] + number,
+          }
+        );
+        if (ok === 1) {
+          res.json({
+            code: 0,
+            message: `Congrats, ${type} image successfully`,
+            data: result,
+          });
+        } else {
+          res.json({
+            code: 4000,
+            message: `Failed to ${type}`,
           });
         }
       } else {

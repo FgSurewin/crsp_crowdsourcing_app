@@ -15,7 +15,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { createImage } from "../../api/collectImage";
-import { addCreateCredit } from "../../api/user";
+import { addCreateCredit, addNumberByType } from "../../api/user";
 
 export default function CaptureLabelPage() {
   /* ---------------------------------- Redux --------------------------------- */
@@ -50,6 +50,11 @@ export default function CaptureLabelPage() {
     const newImageFromDB = await createImage(newImage);
     const number = progress + 10 === 100 ? 3 : 1;
     await addCreateCredit({ id: userId, number });
+    await addNumberByType({
+      name: nickname,
+      number: value.length,
+      type: "label",
+    });
     dispatch({
       type: FILL_STREET_VIEW_MARKERS,
       payload: panoMarkers,

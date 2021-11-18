@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../services/user";
-import { UserBody, LoginBody, UpdateImageBody } from "../types";
+import {
+  UserBody,
+  LoginBody,
+  UpdateImageBody,
+  UpdateUserLabelsBody,
+} from "../types";
 
 const userService = new UserService();
 
@@ -55,5 +60,14 @@ export class UserController {
   ): Promise<void> {
     const body: UpdateImageBody = req.body;
     await userService.addValidateCredit({ req, res, next }, body);
+  }
+
+  async addNumberByType(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const body: UpdateUserLabelsBody = req.body;
+    await userService.addNumberByType({ req, res, next }, body);
   }
 }

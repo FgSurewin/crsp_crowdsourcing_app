@@ -171,21 +171,75 @@ export class CollectImageService {
         _id: id,
       });
       if (result) {
-        const { ok } = await CollectImageModel.updateOne(
-          { _id: id },
-          { count: result.count + 1 }
-        );
-        if (ok === 1) {
+        if (result.count >= 3) {
           res.json({
-            code: 0,
-            message: "Add count successfully",
+            code: 2000,
+            message: "This image has been validated",
             data: result,
           });
         } else {
+          const { ok } = await CollectImageModel.updateOne(
+            { _id: id },
+            { count: result.count + 1 }
+          );
+          if (ok === 1) {
+            res.json({
+              code: 0,
+              message: "Add count successfully",
+              data: result,
+            });
+          } else {
+            res.json({
+              code: 4000,
+              message: "Field to add count",
+            });
+          }
+        }
+      } else {
+        res.json({
+          code: 2000,
+          message: "Result is NULL",
+          data: result,
+        });
+      }
+    } catch (e) {
+      const error = new Error(`${e}`);
+      res.json({
+        code: 5000,
+        message: error.message,
+      });
+    }
+  }
+  async clearCount(ctx: AppContext, id: string): Promise<void> {
+    const { res } = ctx;
+    try {
+      const result = await CollectImageModel.findOne({
+        _id: id,
+      });
+      if (result) {
+        if (result.count >= 3) {
           res.json({
-            code: 4000,
-            message: "Field to add count",
+            code: 2000,
+            message: "This image has been validated",
+            data: result,
           });
+        } else {
+          const { ok } = await CollectImageModel.updateOne(
+            { _id: id },
+            { count: 0 }
+          );
+          if (ok === 1) {
+            res.json({
+              code: 0,
+              message: "Clear count successfully",
+              data: result,
+            });
+          } else {
+            res.json({
+              code: 4000,
+              message: "Field to clear count",
+            });
+          }
         }
       } else {
         res.json({

@@ -8,6 +8,9 @@ export interface UserInterface extends Document {
   institution: string;
   isSent: boolean;
   isReviewed: boolean;
+  label: number;
+  revise: number;
+  modify: number;
   images: number;
   create: number;
   review: number;
@@ -43,6 +46,18 @@ const UserModel = new Schema(
     },
     isReviewed: {
       type: Boolean,
+      required: true,
+    },
+    label: {
+      type: Number,
+      required: true,
+    },
+    revise: {
+      type: Number,
+      required: true,
+    },
+    modify: {
+      type: Number,
       required: true,
     },
     images: {

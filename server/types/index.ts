@@ -55,3 +55,9 @@ export interface UpdateImageBody {
   id: string;
   number: number;
 }
+
+export interface UpdateUserLabelsBody {
+  name: string;
+  number: number;
+  type: "label" | "revise" | "modify";
+}

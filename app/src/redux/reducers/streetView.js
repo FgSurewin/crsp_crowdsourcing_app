@@ -10,6 +10,8 @@ export const FILL_STREET_VIEW_CLEAR_MARKERS = "FILL_STREET_VIEW_CLEAR_MARKERS";
 export const FILL_STREET_VIEW_IMAGE_COMPLETED =
   "FILL_STREET_VIEW_IMAGE_COMPLETED";
 export const FILL_STREET_VIEW_SELECT_IMAGE = "FILL_STREET_VIEW_SELECT_IMAGE";
+export const ADD_IMAGE_COUNT = "ADD_IMAGE_COUNT";
+export const CLEAR_IMAGE_COUNT = "CLEAR_IMAGE_COUNT";
 
 const initialState = {
   pano: null,
@@ -114,6 +116,30 @@ function streetViewReducer(state = initialState, action) {
       return {
         ...state,
         selectImage: currentImage,
+      };
+
+    case ADD_IMAGE_COUNT:
+      const { image_id } = action.payload;
+      return {
+        ...state,
+        images: state.images.map((item) => {
+          if (item.image_id === image_id) {
+            item.count += 1;
+          }
+          return item;
+        }),
+      };
+
+    case CLEAR_IMAGE_COUNT:
+      const { image_id: imageId } = action.payload;
+      return {
+        ...state,
+        images: state.images.map((item) => {
+          if (item.image_id === imageId) {
+            item.count = 0;
+          }
+          return item;
+        }),
       };
 
     default:

@@ -13,6 +13,7 @@ route.get(
 route.get("/getOneById/:Id", checkToken, collectImageController.getImageById);
 route.post("/toggle", checkToken, collectImageController.toggle);
 route.post("/addCount", checkToken, collectImageController.addCount);
+route.post("/clearCount", checkToken, collectImageController.clearCount);
 route.post("/addModifier", checkToken, collectImageController.addModifier);
 route.post(
   "/addMarkers",

@@ -34,16 +34,18 @@ export const compareLabels = (oldLabels, newLabels, creator, currentUser) => {
   let same = true;
   if (oldLabels.length !== newLabels.length) same = false;
   newLabels.forEach((newLabel) => {
+    let match = false;
     oldLabels.forEach((oldLabel) => {
       if (newLabel.label_id === oldLabel.label_id) {
+        match = true;
         if (compareBox(oldLabel.box, newLabel.box)) {
           newLabel.labeledBy = getOriginalName(oldLabel.label_id, oldLabels);
         } else {
           same = false;
         }
-      } else {
       }
     });
+    if (!match) same = false;
   });
   return {
     samePerson,

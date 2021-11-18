@@ -87,6 +87,20 @@ export class CollectImageController {
         message: "Post body is invalid.",
       });
   }
+  async clearCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const { id }: CollectImageBody = req.body;
+    if (id) {
+      await collectImageService.clearCount({ req, res, next }, id);
+    } else
+      res.json({
+        code: 6000,
+        message: "Post body is invalid.",
+      });
+  }
 
   async addModifier(
     req: Request,

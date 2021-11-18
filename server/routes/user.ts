@@ -11,5 +11,6 @@ route.post("/addImages", userController.updateImage);
 route.post("/addCreateCredit", userController.addCreateCredit);
 route.post("/addReviewCredit", userController.addReviewCredit);
 route.post("/addValidateCredit", userController.addValidateCredit);
+route.post("/addNumberByType", userController.addNumberByType);
 
 export default route;

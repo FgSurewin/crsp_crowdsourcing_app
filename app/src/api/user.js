@@ -37,3 +37,9 @@ export const addValidateCredit = (data) =>
     url: `/user/addValidateCredit`,
     data,
   });
+export const addNumberByType = (data) =>
+  myService.request({
+    method: "POST",
+    url: `/user/addNumberByType`,
+    data,
+  });
